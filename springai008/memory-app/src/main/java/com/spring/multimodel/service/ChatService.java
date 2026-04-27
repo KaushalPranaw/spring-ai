@@ -7,4 +7,5 @@ public interface ChatService {
     String chatTemplate(String query);
 
     @Nullable Flux<String> streamChat(String query);
+    String chatTemplateWithConvId(String query, String userId);
 }

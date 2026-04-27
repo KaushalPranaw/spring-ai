@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -71,5 +72,15 @@ public class ChatServiceImpl implements ChatService {
                 .user(user->user.text(userMessageResource).param("concept", query))
                 .stream()
                 .content();
+    }
+
+    @Override
+    public String chatTemplateWithConvId(String query, String userId) {
+        return this.chatClient
+                .prompt()
+                .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, userId))
+                .system(system -> system.text(systemMessageResource))
+                .user(user-> user.text(userMessageResource).param("concept", query))
+                .call().content();
     }
 }
